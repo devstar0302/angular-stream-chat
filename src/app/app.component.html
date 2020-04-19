@@ -1,0 +1,117 @@
+
+<link
+rel="stylesheet"
+href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+crossorigin="anonymous"
+/>
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+type="text/css"
+rel="stylesheet"
+/>
+
+<!-- Toolbar -->
+<div class="content" role="main">
+<div *ngIf="!channel" class="login">
+  <h2 class="title">Login to Chat</h2>
+  <form id="login-form" (ngSubmit)="joinChat()">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="text"
+        name="username"
+        placeholder="Username"
+        [(ngModel)]="username"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<div *ngIf="channel" class="container">
+  <h3 class=" text-center">Stream Messaging</h3>
+  <div class="messaging">
+    <div class="inbox_msg">
+      <div class="inbox_people">
+        <div class="headind_srch">
+          <div class="channel_heading">
+            <h4>Channels</h4>
+          </div>
+        </div>
+        <div class="inbox_chat">
+          <div class="channels" *ngFor="let channel of channelList">
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>
+                    {{ channel.data.name }}
+                  </h5>
+                  <p>
+                    {{
+                      channel.state.messages[
+                        channel.state.messages.length - 1
+                      ].text
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mesgs">
+        <div class="msg_history">
+          <li class="message" *ngFor="let message of messages">
+            <div
+              *ngIf="
+                message.user.id !== currentUser.me.id;
+                then incoming_msg;
+                else outgoing_msg
+              "
+            ></div>
+            <ng-template #incoming_msg>
+              <div class="incoming_msg">
+                <div class="incoming_msg_img">
+                  <img
+                    src="https://i.imgur.com/k2PZLZa.png"
+                    alt="User avatar"
+                  />
+                </div>
+                <div class="received_msg">
+                  <div class="received_withd_msg">
+                    <p>{{ message.text }}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #outgoing_msg>
+              <div class="outgoing_msg">
+                <div class="sent_msg">
+                  <p>{{ message.text }}</p>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+        </div>
+        <div class="type_msg">
+          <form class="input_msg_write" (ngSubmit)="sendMessage()">
+            <input
+              type="text"
+              class="write_msg"
+              placeholder="Type a message"
+              name="newMessage"
+              [(ngModel)]="newMessage"
+            />
+            <button class="msg_send_btn" type="button">
+              <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
